@@ -13,12 +13,6 @@ extracted_dir = "#{Chef::Config['file_cache_path']}/agent-upgrade"
 install_properties = "#{Chef::Config['file_cache_path']}/agent.install.properties"
 startup_script = "#{node['sda-agent']['agent_dir']}/bin/sraagent"
 
-# Provide SDA Service
-service "sdaagent" do
-  action :nothing
-  supports :restart => true, :start => true, :stop => true, :status => true
-end
-
 # Create SDA group
 group node['sda-agent']['group'] do
 	gid node['sda-agent']['gid']
@@ -79,7 +73,7 @@ this_property_file = template "agent-install.properties" do
 	notifies :stop, "service[sdaagent]", :immediately
 	notifies :run, "execute[install_agent]", :immediately
 	notifies :run, "execute[chown_dir]", :immediately
-	notifies :start, "service[sdaagent]", :immediately
+	notifies :stop, "service[sdaagent]"
 end
 
 # Install Agent using property file
@@ -105,6 +99,13 @@ this_service_file = template "sdaagent" do
 	group "root"
 	source "sdaagent.erb"
 	mode '0755'
-	notifies :start, "service[sdaagent]", :immediately
+	notifies :start, "service[sdaagent]"
 	only_if { this_installer_file.updated_by_last_action? || node['sda-agent']['reinstall'] }
+end
+
+
+# Provide SDA Service
+service "sdaagent" do
+  action :nothing
+  supports :restart => true, :start => true, :stop => true, :status => true
 end
