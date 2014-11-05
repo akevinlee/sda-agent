@@ -143,7 +143,7 @@ Or better still create a role such as `base` which also resolve dependencies:
 }
 ```
 
-Note: Linux support is working, Windows is currently being worked on. At the moment it does nothing!
+Note: Linux support only at the moment.
 
 Contributing
 ------------
