@@ -12,8 +12,13 @@ locked/agent.jms.remote.host=<%= node['sda-agent']['remote_host'] %>
 locked/agent.jms.remote.port=<%= node['sda-agent']['remote_port'] %>
 
 # IP or host of the relay
+<% if node['sda-agent']['proxy_host'] == "" -%>
+#locked/agent.http.proxy.host=<%= node['sda-agent']['proxy_host'] %>
+#locked/agent.http.proxy.port=<%= node['sda-agent']['proxy_port'] %>
+<% else -%>
 locked/agent.http.proxy.host=<%= node['sda-agent']['proxy_host'] %>
 locked/agent.http.proxy.port=<%= node['sda-agent']['proxy_port'] %>
+<% end -%>
 
 # If the agent should verify the certificate of the server or relay it connects to
 locked/agent.mutual_auth=<%= node['sda-agent']['mutual_auth'] %>
